@@ -1,0 +1,71 @@
+package net.java_school.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class SoccerTable {
+
+	public static void main(String[] args) {
+
+		String DB_URL = "jdbc:oracle:thin:@127.0.0.1:1521:XE";
+		String DB_USER = "SCOTT";
+		String DB_PASSWORD = "TIGER";
+
+		// JDBC 드라이버 로딩
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// finally 블록에서 con.close();코드로 자원 반납할때 finally 블록도 con이
+		// 해석될 수 있는 영역 이여야하기때문에 !!
+		Connection con = null;
+		Statement stmt = null;
+		String sql = null;
+
+		try {
+			// Connection 맺기
+			// (url,사용자 계정, 계정비번)
+			con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			// Statment 얻기
+			stmt = con.createStatement();
+
+			sql = "create table Soccer ( " + "team VARCHAR2(20) NOT NULL, "
+					+ "name VARCHAR2(20) NOT NULL, " + "age int NOT NULL, "
+					+ "position VARCHAR2(20) NOT NULL, "
+					+ "Tnumber int NOT NULL, "
+					+ "country VARCHAR2(20) NOT NULL);";
+
+			// JDBC 단점으로 SQL 문을 자바 문자열로 바꿔야 한다는 점
+			// 자바문자열을 인자 값으로 Statement의 executeUpdate()호출
+			// executeQuery문은 주로 INSERT, UPDATE, DELETE 이나 CREATE,DROP, ALTER에
+			// 사용
+			// sql문 실행
+			stmt.executeUpdate(sql);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// 자원반납
+			// JDBC 코드중에서 가장 중요
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+}
