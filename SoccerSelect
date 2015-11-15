@@ -1,0 +1,74 @@
+package net.java_school.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+// 목록 출력
+public class SoccerSelect {
+	static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:XE";
+	static final String USER = "SCOTT";
+	static final String PASS = "TIGER";
+
+	public static void main(String[] args) {
+		// JDBC 드라이버 로딩
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT team,name,age,position,tnumber,country "
+				+ "FROM Soccer " + "ORDER BY  DESC";
+
+		try {
+			// Connection 맺기
+			con = DriverManager.getConnection(URL, USER, PASS);
+			// SQL 실행
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			while (rs.next()) {
+				int no = rs.getInt("team");
+				String name = rs.getString("name");
+				String mobile = rs.getString("age");
+				String email = rs.getString("position");
+				String company = rs.getString("country");
+				System.out.println(no + "|" + name + "|" + mobile + "|" + email
+						+ "|" + company);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(sql);
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+}
