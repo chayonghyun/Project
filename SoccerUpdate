@@ -1,0 +1,57 @@
+package net.java_school.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+// 버튼 클릭시 수정
+public class SoccerUpdate {
+	static final String URL = "jdbc:oracle:thin:@127.0.0.1:1521:XE";
+	static final String USER = "SCOTT";
+	static final String PASS = "TIGER";
+
+	public static void main(String[] args) {
+		// JDBC 드라이버 로딩
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE Soccer SET country= WHERE team='맨유'";
+
+		try {
+			// 커넥션 맺기
+			con = DriverManager.getConnection(URL, USER, PASS);
+
+			// SQL 실행
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "한국");
+			pstmt.setInt(2, 1);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(sql);
+		} finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
